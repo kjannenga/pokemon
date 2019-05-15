@@ -1,17 +1,26 @@
 let pokemon1 = []
-
 let pokemon2 = []
+document.getElementById("attack-1").style.display = "none"
+document.getElementById("attack-2").style.display = "none"
+
+
 
 
 document.getElementById("battle1").addEventListener('click', function () {
-
 function getPokemon(url) {
+    document.getElementById("alerts").innerHTML = "";
+    
     return new Promise((resolve, reject) => {
          fetch(url)
             .then(res => {
                 if (!res.ok) {
                     if (res.status == 404) {
-                        alert("pokemon not in pokedex - try again")
+                        var a = document.getElementById("alerts")
+                        var p = document.createElement('p');
+                        p.innerHTML = '<b>Pokemon not in pokedex! CHOOSE A NEW POKEMON!</b>';
+                        a.append(p);
+                        document.getElementById("attack-1").style.display = "none"
+                        document.getElementById('img1').src = "http://placehold.it/100x100?text=Poke+1" 
                     }
                 }
                 return res.json()
@@ -24,7 +33,6 @@ function getPokemon(url) {
             })
     })
 }
-
     getPokemon('https://pokeapi.co/api/v2/pokemon')
         .then(pokemon => {
             let pokeurl1 = findPokemon(pokemon.count)
@@ -32,6 +40,9 @@ function getPokemon(url) {
                 .then(pokemon => {
                     pokemon1 = pokemon;
                     content('poke-1', pokemon1)
+                    document.getElementById("attack-1").style.display = "inline"
+                    
+                    
                 })
         })
         .catch(err => {
@@ -40,6 +51,7 @@ function getPokemon(url) {
 })
 
 document.getElementById("battle2").addEventListener('click', function () {
+    document.getElementById("alerts").innerHTML = "";
     function getPokemon(url) {
         return new Promise((resolve, reject) => {
             fetch(url)
@@ -47,7 +59,12 @@ document.getElementById("battle2").addEventListener('click', function () {
                     if (!res.ok) {
                         console.log(res.status)
                         if (res.status == 404) {
-                            alert("pokemon not in pokedex - try again")
+                            var a = document.getElementById("alerts")
+                            var p = document.createElement('p');
+                            p.innerHTML = '<b>Pokemon not in pokedex! CHOOSE A NEW POKEMON!</b>';
+                            a.append(p);
+                            document.getElementById("attack-2").style.display = "none"
+                            document.getElementById('img2').src =  "http://placehold.it/100x100?text=Poke+2" 
                         }
                     }
                     return res.json()
@@ -60,7 +77,6 @@ document.getElementById("battle2").addEventListener('click', function () {
                 })
         })
     }
-
     getPokemon('https://pokeapi.co/api/v2/pokemon')
         .then(pokemon => {
 
@@ -70,30 +86,34 @@ document.getElementById("battle2").addEventListener('click', function () {
                 .then(pokemon => {
                     pokemon2 = pokemon;
                     content('poke-2', pokemon2)
+                    document.getElementById("attack-2").style.display = "inline"
                 })
         })
         .catch(err => {
             console.log(err)
         })
-
 })
 
 document.getElementById("attack-1").addEventListener('click', function () {
     var container = document.getElementById('poke-2')
     var health = container.querySelector('.health span')
     health.textContent -= Math.round(pokemon1.base_experience / 3)
-
     let max = Math.floor(pokemon1.moves.length);
     let num = Math.floor(Math.random() * max);
+    var a = document.getElementById("alerts")
+    var p = document.createElement('p');
+    p.innerHTML = `${pokemon1.name}  has used  ${pokemon1.moves[num].move.name}`
 
-    alert(pokemon1.name + ' has used ' + pokemon1.moves[num].move.name)
+    a.prepend(p)
 
     if (health.textContent <= 0) {
         health.textContent = 0
-        alert(pokemon2.name + ' has fainted! Choose a new pokemon!')
-
+        p.innerHTML = `<b>${pokemon2.name} has fainted! CHOOSE A NEW POKEMON!</b>`;
+        p.className = "text-danger"
+        a.prepend(p);
+        document.getElementById("attack-2").style.display = "none"
+       
     }
-
 })
 
 document.getElementById("attack-2").addEventListener('click', function () {
@@ -102,18 +122,21 @@ document.getElementById("attack-2").addEventListener('click', function () {
     health.textContent -= Math.round(pokemon2.base_experience / 3)
     let max = Math.floor(pokemon1.moves.length);
     let num = Math.floor(Math.random() * max);
+    var a = document.getElementById("alerts")
+    var p = document.createElement('p');
 
-    alert(pokemon2.name + ' has used ' + pokemon2.moves[num].move.name)
+    p.innerHTML = `${pokemon2.name}  has used  ${pokemon2.moves[num].move.name}`
+
+    a.prepend(p)
+
     if (health.textContent <= 0) {
         health.textContent = 0
-        alert(pokemon1.name + ' has fainted! Choose a new pokemon!')
+        p.className = "text-danger"
+        p.innerHTML = `<b>${pokemon1.name} has fainted! CHOOSE A NEW POKEMON!</b>`
+        a.prepend(p);
+        document.getElementById("attack-1").style.display = "none"
     }
 })
-
-
-
-
-
 
 function findPokemon(max) {
     min = Math.ceil(0);
@@ -122,21 +145,17 @@ function findPokemon(max) {
     return 'https://pokeapi.co/api/v2/pokemon/' + num.toString()
 }
 
-function content(user, data) {
-    var container = document.getElementById(user)
+function content(poke, data) {
+    var container = document.getElementById(poke)
     var snapshot = container.querySelector('.snapshot')
     var name = container.querySelector('.name span')
     var type = container.querySelector('.type span')
     var health = container.querySelector('.health span')
     var attack = container.querySelector('.attack span')
 
-
-
     snapshot.src = data.sprites.front_default
     name.textContent = data.name
     type.textContent = data.types[0].type.name
     health.textContent = data.base_experience
     attack.textContent = Math.round(data.base_experience / 3)
-
-
 }
