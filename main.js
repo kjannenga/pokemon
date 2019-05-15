@@ -9,7 +9,6 @@ document.getElementById("attack-2").style.display = "none"
 document.getElementById("battle1").addEventListener('click', function () {
 function getPokemon(url) {
     document.getElementById("alerts").innerHTML = "";
-    
     return new Promise((resolve, reject) => {
          fetch(url)
             .then(res => {
@@ -21,6 +20,12 @@ function getPokemon(url) {
                         a.append(p);
                         document.getElementById("attack-1").style.display = "none"
                         document.getElementById('img1').src = "http://placehold.it/100x100?text=Poke+1" 
+                        var uk = document.querySelectorAll(".uk")
+                        uk[0].textContent = "Unkown"
+                        uk[1].textContent = "Unkown"
+                        uk[2].textContent = "Unkown"
+                        uk[3].textContent = "Unkown"
+                        throw new Error("poke not found")
                     }
                 }
                 return res.json()
@@ -30,6 +35,7 @@ function getPokemon(url) {
             })
             .catch(err => {
                 reject(err)
+                console.log(err)
             })
     })
 }
@@ -40,9 +46,7 @@ function getPokemon(url) {
                 .then(pokemon => {
                     pokemon1 = pokemon;
                     content('poke-1', pokemon1)
-                    document.getElementById("attack-1").style.display = "inline"
-                    
-                    
+                    document.getElementById("attack-1").style.display = "inline"   
                 })
         })
         .catch(err => {
@@ -65,6 +69,11 @@ document.getElementById("battle2").addEventListener('click', function () {
                             a.append(p);
                             document.getElementById("attack-2").style.display = "none"
                             document.getElementById('img2').src =  "http://placehold.it/100x100?text=Poke+2" 
+                            var un = document.querySelectorAll(".uk")
+                            un[0].textContent = "Unkown"
+                            un[1].textContent = "Unkown"
+                            un[2].textContent = "Unkown"
+                            un[3].textContent = "Unkown"
                         }
                     }
                     return res.json()
