@@ -69,7 +69,7 @@ document.getElementById("battle2").addEventListener('click', function () {
                             a.append(p);
                             document.getElementById("attack-2").style.display = "none"
                             document.getElementById('img2').src =  "http://placehold.it/100x100?text=Poke+2" 
-                            var un = document.querySelectorAll(".uk")
+                            var un = document.querySelectorAll(".un")
                             un[0].textContent = "Unkown"
                             un[1].textContent = "Unkown"
                             un[2].textContent = "Unkown"
